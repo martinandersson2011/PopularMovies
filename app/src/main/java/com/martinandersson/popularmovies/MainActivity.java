@@ -1,5 +1,6 @@
 package com.martinandersson.popularmovies;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -7,6 +8,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import com.martinandersson.popularmovies.events.SelectedMovieEvent;
+import com.martinandersson.popularmovies.events.SortOrderEvent;
+
+import de.greenrobot.event.EventBus;
 
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = MainActivity.class.getSimpleName();
@@ -17,6 +23,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 
     @Override
@@ -31,15 +49,21 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_most_popular) {
-            Log.d(TAG, "Most Popular");
+            EventBus.getDefault().postSticky(new SortOrderEvent(Constants.SORT_ORDER_MOST_POPULAR));
             Toast.makeText(this, "TODO - Most Popular", Toast.LENGTH_SHORT).show();
             return true;
         } else if (id == R.id.action_highest_rated) {
-            Log.d(TAG, "Highest Rated");
+            EventBus.getDefault().postSticky(new SortOrderEvent(Constants.SORT_ORDER_HIGHEST_RATED));
             Toast.makeText(this, "TODO - Highest Rated", Toast.LENGTH_SHORT).show();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onEvent(SelectedMovieEvent event) {
+        Intent intent = new Intent(this, DetailActivity.class);
+        startActivity(intent);
+
     }
 }

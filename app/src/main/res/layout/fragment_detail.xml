@@ -1,0 +1,83 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/standard_margin"
+        tools:context=".DetailActivityFragment"
+        tools:showIn="@layout/detail_main">
+
+
+        <TextView
+            android:id="@+id/detail_title"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="#0A9"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/standard_margin"
+            android:paddingRight="@dimen/standard_margin"
+            android:text="@string/sample_movie_title"
+            android:textColor="@android:color/white"
+            android:textSize="30sp"
+            />
+
+
+        <ImageView
+            android:id="@+id/detail_image"
+            android:layout_width="150dp"
+            android:layout_height="220dp"
+            android:layout_below="@+id/detail_title"
+            android:layout_marginLeft="@dimen/standard_margin"
+            android:layout_marginStart="@dimen/standard_margin"
+            android:layout_marginTop="@dimen/standard_margin"
+            android:contentDescription="@string/cd_movie"/>
+
+
+        <TextView
+            android:id="@+id/detail_release_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/detail_title"
+            android:layout_marginLeft="@dimen/standard_margin"
+            android:layout_marginStart="@dimen/standard_margin"
+            android:layout_marginTop="@dimen/standard_margin"
+            android:layout_toEndOf="@+id/detail_image"
+            android:layout_toRightOf="@id/detail_image"
+            android:text="@string/sample_release_date"
+            android:textSize="24sp"
+            />
+
+        <TextView
+            android:id="@+id/detail_vote_average"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/detail_release_date"
+            android:layout_marginLeft="@dimen/standard_margin"
+            android:layout_marginStart="@dimen/standard_margin"
+            android:layout_marginTop="@dimen/half_margin"
+            android:layout_toEndOf="@+id/detail_image"
+            android:layout_toRightOf="@id/detail_image"
+            android:text="@string/sample_vote_average"
+            android:textSize="18sp"
+            />
+
+        <TextView
+            android:id="@+id/detail_overview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/detail_image"
+            android:layout_marginEnd="@dimen/standard_margin"
+            android:layout_marginLeft="@dimen/standard_margin"
+            android:layout_marginRight="@dimen/standard_margin"
+            android:layout_marginStart="@dimen/standard_margin"
+            android:layout_marginTop="@dimen/standard_margin"
+            android:text="@string/sample_movie_description"
+            android:textSize="12sp"
+            />
+
+    </RelativeLayout>
+
+</ScrollView>
