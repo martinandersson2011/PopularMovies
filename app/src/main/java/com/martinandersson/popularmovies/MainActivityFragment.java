@@ -1,6 +1,5 @@
 package com.martinandersson.popularmovies;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -9,10 +8,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.martinandersson.popularmovies.api.RestClient;
-import com.martinandersson.popularmovies.events.SelectedMovieEvent;
 import com.martinandersson.popularmovies.events.SortOrderEvent;
 import com.martinandersson.popularmovies.model.Movie;
 import com.martinandersson.popularmovies.model.MoviesResponse;
@@ -33,9 +31,12 @@ public class MainActivityFragment extends Fragment {
     @Bind(R.id.recyclerview)
     RecyclerView mRecyclerView;
 
+    @Bind(R.id.no_results)
+    TextView mNoResults;
+
     private GridLayoutManager mLayoutManager;
     private MoviesAdapter mAdapter;
-    private List<Movie> mMovies = new ArrayList<Movie>();
+    private List<Movie> mMovies = new ArrayList<>();
 
     public MainActivityFragment() {
     }
@@ -73,6 +74,7 @@ public class MainActivityFragment extends Fragment {
     }
 
     private void getMovies() {
+        mNoResults.setVisibility(View.GONE);
         Callback<MoviesResponse> moviesResponseCallback = new Callback<MoviesResponse>() {
             @Override
             public void success(MoviesResponse moviesResponse, Response response) {
@@ -83,7 +85,7 @@ public class MainActivityFragment extends Fragment {
             @Override
             public void failure(RetrofitError error) {
                 Log.w(TAG, "Failed to get movies: " + error.getMessage());
-                Toast.makeText(getActivity(), "Failed to get movies", Toast.LENGTH_SHORT).show();
+                mNoResults.setVisibility(View.VISIBLE);
             }
         };
 

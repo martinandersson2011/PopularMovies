@@ -11,4 +11,17 @@
         android:layout_height="match_parent"
         />
 
+    <TextView
+        android:id="@+id/no_results"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginEnd="@dimen/standard_margin"
+        android:layout_marginLeft="@dimen/standard_margin"
+        android:layout_marginRight="@dimen/standard_margin"
+        android:layout_marginStart="@dimen/standard_margin"
+        android:gravity="center"
+        android:text="@string/no_results"
+        android:visibility="gone"/>
+
 </RelativeLayout>

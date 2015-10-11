@@ -15,7 +15,6 @@ import com.martinandersson.popularmovies.events.SortOrderEvent;
 import de.greenrobot.event.EventBus;
 
 public class MainActivity extends AppCompatActivity {
-    public static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,11 +49,9 @@ public class MainActivity extends AppCompatActivity {
 
         if (id == R.id.action_most_popular) {
             EventBus.getDefault().postSticky(new SortOrderEvent(Constants.SORT_ORDER_MOST_POPULAR));
-            Toast.makeText(this, "TODO - Most Popular", Toast.LENGTH_SHORT).show();
             return true;
         } else if (id == R.id.action_highest_rated) {
             EventBus.getDefault().postSticky(new SortOrderEvent(Constants.SORT_ORDER_HIGHEST_RATED));
-            Toast.makeText(this, "TODO - Highest Rated", Toast.LENGTH_SHORT).show();
             return true;
         }
 
