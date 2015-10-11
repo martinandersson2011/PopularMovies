@@ -46,7 +46,7 @@ public class MainActivityFragment extends Fragment {
         ButterKnife.bind(this, rootView);
 
         mRecyclerView.setHasFixedSize(false);
-        mLayoutManager = new GridLayoutManager(getActivity(), 2);
+        mLayoutManager = new GridLayoutManager(getActivity(), getResources().getInteger(R.integer.grid_columns));
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new MoviesAdapter(getActivity(), mMovies);
         mRecyclerView.setAdapter(mAdapter);
