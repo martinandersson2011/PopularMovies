@@ -26,8 +26,8 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class MainActivityFragment extends Fragment {
-    public static final String TAG = MainActivityFragment.class.getSimpleName();
+public class MovieGridFragment extends Fragment {
+    public static final String TAG = MovieGridFragment.class.getSimpleName();
 
     public static final String KEY_MOVIES_RESPONSE = "com.martinandersson.popularmovies.moviesresponse";
 
@@ -42,12 +42,12 @@ public class MainActivityFragment extends Fragment {
     private MoviesResponse mMoviesResponse;
     private List<Movie> mMovies = new ArrayList<>();
 
-    public MainActivityFragment() {
+    public MovieGridFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_movie_grid, container, false);
         ButterKnife.bind(this, rootView);
 
         mRecyclerView.setHasFixedSize(false);

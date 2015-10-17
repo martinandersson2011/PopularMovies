@@ -17,14 +17,11 @@ import android.widget.Toast;
 import com.martinandersson.popularmovies.api.RestClient;
 import com.martinandersson.popularmovies.events.SelectedMovieEvent;
 import com.martinandersson.popularmovies.model.Movie;
-import com.martinandersson.popularmovies.model.MoviesResponse;
 import com.martinandersson.popularmovies.model.Review;
 import com.martinandersson.popularmovies.model.ReviewsResponse;
 import com.martinandersson.popularmovies.model.Video;
 import com.martinandersson.popularmovies.model.VideosResponse;
 import com.squareup.picasso.Picasso;
-
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -34,8 +31,8 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class DetailActivityFragment extends Fragment {
-    public static final String TAG = DetailActivityFragment.class.getSimpleName();
+public class MovieDetailFragment extends Fragment {
+    public static final String TAG = MovieDetailFragment.class.getSimpleName();
 
     public static final String KEY_REVIEWS_RESPONSE = "com.martinandersson.popularmovies.reviewsresponse";
     public static final String KEY_VIDEOS_RESPONSE = "com.martinandersson.popularmovies.videosresponse";
@@ -69,13 +66,13 @@ public class DetailActivityFragment extends Fragment {
 
     private LayoutInflater mInflater;
     private Movie mMovie;
-    public DetailActivityFragment() {
+    public MovieDetailFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mInflater = inflater;
-        View rootView = mInflater.inflate(R.layout.fragment_detail, container, false);
+        View rootView = mInflater.inflate(R.layout.fragment_movie_detail, container, false);
         ButterKnife.bind(this, rootView);
 
         SelectedMovieEvent event = EventBus.getDefault().getStickyEvent(SelectedMovieEvent.class);
