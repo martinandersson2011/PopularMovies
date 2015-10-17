@@ -38,6 +38,7 @@
 
         <TextView
             android:id="@+id/detail_release_date"
+            style="@style/textTitleStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/detail_title"
@@ -47,11 +48,11 @@
             android:layout_toEndOf="@+id/detail_image"
             android:layout_toRightOf="@id/detail_image"
             android:text="@string/sample_release_date"
-            android:textSize="24sp"
             />
 
         <TextView
             android:id="@+id/detail_vote_average"
+            style="@style/textTitle2Style"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/detail_release_date"
@@ -61,22 +62,80 @@
             android:layout_toEndOf="@+id/detail_image"
             android:layout_toRightOf="@id/detail_image"
             android:text="@string/sample_vote_average"
-            android:textSize="18sp"
             />
 
         <TextView
             android:id="@+id/detail_overview"
+            style="@style/textBodyStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/detail_image"
+            android:layout_marginBottom="@dimen/standard_margin"
             android:layout_marginEnd="@dimen/standard_margin"
             android:layout_marginLeft="@dimen/standard_margin"
             android:layout_marginRight="@dimen/standard_margin"
             android:layout_marginStart="@dimen/standard_margin"
             android:layout_marginTop="@dimen/standard_margin"
             android:text="@string/sample_movie_description"
-            android:textSize="12sp"
             />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/detail_overview"
+            android:layout_marginLeft="@dimen/standard_margin"
+            android:layout_marginRight="@dimen/standard_margin"
+            android:background="@color/divider_color"
+            />
+
+        <TextView
+            android:id="@+id/reviews_title"
+            style="@style/textTitleStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/detail_overview"
+            android:layout_marginLeft="@dimen/standard_margin"
+            android:layout_marginStart="@dimen/standard_margin"
+            android:layout_marginTop="@dimen/standard_margin"
+            android:text="@string/reviews"
+            />
+
+        <LinearLayout
+            android:id="@+id/reviews_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/reviews_title"
+            android:layout_marginBottom="@dimen/standard_margin"
+            android:orientation="vertical"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/reviews_layout"
+            android:layout_marginLeft="@dimen/standard_margin"
+            android:layout_marginRight="@dimen/standard_margin"
+            android:background="@color/divider_color"
+            />
+
+        <TextView
+            android:id="@+id/trailers_title"
+            style="@style/textTitleStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/reviews_layout"
+            android:layout_marginLeft="@dimen/standard_margin"
+            android:layout_marginStart="@dimen/standard_margin"
+            android:layout_marginTop="@dimen/standard_margin"
+            android:text="@string/trailers"
+            />
+
+        <LinearLayout
+            android:id="@+id/trailers_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/trailers_title"
+            android:orientation="vertical"/>
+
 
     </RelativeLayout>
 

@@ -1,5 +1,8 @@
 package com.martinandersson.popularmovies;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -7,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,15 +50,24 @@ public class DetailActivityFragment extends Fragment {
     @Bind(R.id.detail_overview)
     TextView mDetailOverview;
 
+    @Bind(R.id.reviews_layout)
+    LinearLayout mReviewsLayout;
+
+    @Bind(R.id.trailers_layout)
+    LinearLayout mTrailersLayout;
+
     private List<Review> mReviewList;
     private List<Video> mVideoList;
+
+    private LayoutInflater mInflater;
 
     public DetailActivityFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+        mInflater = inflater;
+        View rootView = mInflater.inflate(R.layout.fragment_detail, container, false);
         ButterKnife.bind(this, rootView);
 
         SelectedMovieEvent event = EventBus.getDefault().getStickyEvent(SelectedMovieEvent.class);
@@ -77,9 +90,7 @@ public class DetailActivityFragment extends Fragment {
                 @Override
                 public void success(ReviewsResponse reviewsResponse, Response response) {
                     mReviewList = reviewsResponse.getReviewList();
-                    for (Review review : mReviewList) {
-                        Log.d(TAG, review.getId() + ", " + review.getContent());
-                    }
+                    handleReviews();
                 }
 
                 @Override
@@ -93,9 +104,7 @@ public class DetailActivityFragment extends Fragment {
                 @Override
                 public void success(VideosResponse videosResponse, Response response) {
                     mVideoList = videosResponse.getVideoList();
-                    for (Video video : mVideoList) {
-                        Log.d(TAG, video.getType() + " " + video.getId());
-                    }
+                    handleVideos();
                 }
 
                 @Override
@@ -112,4 +121,41 @@ public class DetailActivityFragment extends Fragment {
         return rootView;
     }
 
+    private void handleReviews() {
+        mReviewsLayout.removeAllViews();
+        for (Review review : mReviewList) {
+            View row = mInflater.inflate(R.layout.row_review, mReviewsLayout, false);
+            TextView authorTextView = (TextView) row.findViewById(R.id.row_author);
+            TextView contentTextView = (TextView) row.findViewById(R.id.row_content);
+            authorTextView.setText(review.getAuthor());
+            contentTextView.setText(review.getContent());
+            mReviewsLayout.addView(row);
+        }
+    }
+
+    private void handleVideos() {
+        mTrailersLayout.removeAllViews();
+        for (final Video video : mVideoList) {
+            View row = mInflater.inflate(R.layout.row_trailer, mTrailersLayout, false);
+            TextView contentTextView = (TextView) row.findViewById(R.id.row_content);
+            contentTextView.setText(video.getName());
+            mTrailersLayout.addView(row);
+            row.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    watchYoutubeVideo(video.getKey());
+                }
+            });
+        }
+    }
+
+    public void watchYoutubeVideo(String videoKey) {
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + videoKey));
+            startActivity(intent);
+        } catch (ActivityNotFoundException ex) {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + videoKey));
+            startActivity(intent);
+        }
+    }
 }

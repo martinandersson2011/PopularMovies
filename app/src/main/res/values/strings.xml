@@ -9,4 +9,9 @@
     <string name="sample_release_date">2015</string>
     <string name="sample_vote_average">9.1/10</string>
     <string name="sample_movie_description">This is a sample description for a movie</string>
+    <string name="reviews">Reviews</string>
+    <string name="sample_author">Martin</string>
+    <string name="sample_content">This was the best movie I\'ve ever seen. Except for most of the other movies. Wait what?</string>
+    <string name="trailers">Trailers</string>
+    <string name="sample_trailer">Trailer 1</string>
 </resources>
