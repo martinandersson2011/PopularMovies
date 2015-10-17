@@ -29,6 +29,8 @@ import retrofit.client.Response;
 public class MainActivityFragment extends Fragment {
     public static final String TAG = MainActivityFragment.class.getSimpleName();
 
+    public static final String KEY_MOVIES_RESPONSE = "com.martinandersson.popularmovies.moviesresponse";
+
     @Bind(R.id.recyclerview)
     RecyclerView mRecyclerView;
 
@@ -37,6 +39,7 @@ public class MainActivityFragment extends Fragment {
 
     private GridLayoutManager mLayoutManager;
     private MoviesAdapter mAdapter;
+    private MoviesResponse mMoviesResponse;
     private List<Movie> mMovies = new ArrayList<>();
 
     public MainActivityFragment() {
@@ -53,7 +56,18 @@ public class MainActivityFragment extends Fragment {
         mAdapter = new MoviesAdapter(getActivity(), mMovies);
         mRecyclerView.setAdapter(mAdapter);
 
-        getMovies();
+        // Check if we have data to display (after rotation)
+        if (savedInstanceState != null) {
+            mMoviesResponse = (MoviesResponse) savedInstanceState.getSerializable(KEY_MOVIES_RESPONSE);
+            if (mMoviesResponse != null) {
+                mMovies = mMoviesResponse.getMovieList();
+                mAdapter.updateData(mMovies);
+            } else {
+                getMovies();
+            }
+        } else {
+            getMovies();
+        }
 
         return rootView;
     }
@@ -79,6 +93,7 @@ public class MainActivityFragment extends Fragment {
         Callback<MoviesResponse> moviesResponseCallback = new Callback<MoviesResponse>() {
             @Override
             public void success(MoviesResponse moviesResponse, Response response) {
+                mMoviesResponse = moviesResponse;
                 mMovies = moviesResponse.getMovieList();
                 mAdapter.updateData(mMovies);
             }
@@ -92,11 +107,16 @@ public class MainActivityFragment extends Fragment {
 
         SortOrderEvent event = EventBus.getDefault().getStickyEvent(SortOrderEvent.class);
         if (event == null || event.getSortOrder() == Constants.SORT_ORDER_MOST_POPULAR) {
+            // Default to most popular
             RestClient.getMoviesApi().getMoviesByPopularity(moviesResponseCallback);
-        } else if (event == null || event.getSortOrder() == Constants.SORT_ORDER_HIGHEST_RATED) {
+        } else if (event.getSortOrder() == Constants.SORT_ORDER_HIGHEST_RATED) {
+            // Highest rated
             RestClient.getMoviesApi().getMoviesByRating(moviesResponseCallback);
         } else {
+            // Favorites from shared preferences
             mMovies = FavoritesManager.getFavoriteMovies(getActivity());
+            mMoviesResponse = new MoviesResponse();
+            mMoviesResponse.setMovieList(mMovies);
             mAdapter.updateData(mMovies);
             mNoResults.setVisibility(mMovies.size() == 0 ? View.VISIBLE : View.GONE);
             if (mMovies.size() == 0) {
@@ -105,4 +125,11 @@ public class MainActivityFragment extends Fragment {
         }
 
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(KEY_MOVIES_RESPONSE, mMoviesResponse);
+    }
+
 }

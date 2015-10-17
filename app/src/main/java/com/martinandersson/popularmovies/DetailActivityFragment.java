@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.martinandersson.popularmovies.api.RestClient;
 import com.martinandersson.popularmovies.events.SelectedMovieEvent;
 import com.martinandersson.popularmovies.model.Movie;
+import com.martinandersson.popularmovies.model.MoviesResponse;
 import com.martinandersson.popularmovies.model.Review;
 import com.martinandersson.popularmovies.model.ReviewsResponse;
 import com.martinandersson.popularmovies.model.Video;
@@ -35,6 +36,9 @@ import retrofit.client.Response;
 
 public class DetailActivityFragment extends Fragment {
     public static final String TAG = DetailActivityFragment.class.getSimpleName();
+
+    public static final String KEY_REVIEWS_RESPONSE = "com.martinandersson.popularmovies.reviewsresponse";
+    public static final String KEY_VIDEOS_RESPONSE = "com.martinandersson.popularmovies.videosresponse";
 
     @Bind(R.id.detail_title)
     TextView mDetailTitle;
@@ -60,8 +64,8 @@ public class DetailActivityFragment extends Fragment {
     @Bind(R.id.trailers_layout)
     LinearLayout mTrailersLayout;
 
-    private List<Review> mReviewList;
-    private List<Video> mVideoList;
+    private ReviewsResponse mReviewsResponse;
+    private VideosResponse mVideosResponse;
 
     private LayoutInflater mInflater;
     private Movie mMovie;
@@ -93,33 +97,28 @@ public class DetailActivityFragment extends Fragment {
             boolean favorite = FavoritesManager.isMovieFavorite(getActivity(), mMovie);
             mDetailFavorite.setImageResource(favorite ? R.drawable.ic_star_black_48dp : R.drawable.ic_star_border_black_48dp);
 
-            RestClient.getMoviesApi().getReviews(mMovie.getId(), new Callback<ReviewsResponse>() {
-                @Override
-                public void success(ReviewsResponse reviewsResponse, Response response) {
-                    mReviewList = reviewsResponse.getReviewList();
+            // Check if we have data to display (after rotation)
+            if (savedInstanceState != null) {
+                // Reviews
+                mReviewsResponse = (ReviewsResponse) savedInstanceState.getSerializable(KEY_REVIEWS_RESPONSE);
+                if (mReviewsResponse != null) {
                     handleReviews();
+                } else {
+                    getReviews();
                 }
 
-                @Override
-                public void failure(RetrofitError error) {
-                    Log.w(TAG, "Failed to get reviews: " + error.getMessage());
-                    Toast.makeText(getActivity(), "Failed to get reviews", Toast.LENGTH_SHORT).show();
-                }
-            });
-
-            RestClient.getMoviesApi().getVideos(mMovie.getId(), new Callback<VideosResponse>() {
-                @Override
-                public void success(VideosResponse videosResponse, Response response) {
-                    mVideoList = videosResponse.getVideoList();
+                // Videos
+                mVideosResponse = (VideosResponse) savedInstanceState.getSerializable(KEY_VIDEOS_RESPONSE);
+                if (mVideosResponse != null) {
+                    handleVideos();
+                } else {
                     handleVideos();
                 }
-
-                @Override
-                public void failure(RetrofitError error) {
-                    Log.w(TAG, "Failed to get videos: " + error.getMessage());
-                    Toast.makeText(getActivity(), "Failed to get videos", Toast.LENGTH_SHORT).show();
-                }
-            });
+            } else {
+                // We have no data to display so get both reviews and videos
+                getReviews();
+                getVideos();
+            }
 
         } else {
             Log.w(TAG, "No selected movie");
@@ -128,9 +127,25 @@ public class DetailActivityFragment extends Fragment {
         return rootView;
     }
 
+    private void getReviews() {
+        RestClient.getMoviesApi().getReviews(mMovie.getId(), new Callback<ReviewsResponse>() {
+            @Override
+            public void success(ReviewsResponse reviewsResponse, Response response) {
+                mReviewsResponse = reviewsResponse;
+                handleReviews();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.w(TAG, "Failed to get reviews: " + error.getMessage());
+                Toast.makeText(getActivity(), "Failed to get reviews", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void handleReviews() {
         mReviewsLayout.removeAllViews();
-        for (Review review : mReviewList) {
+        for (Review review : mReviewsResponse.getReviewList()) {
             View row = mInflater.inflate(R.layout.row_review, mReviewsLayout, false);
             TextView authorTextView = (TextView) row.findViewById(R.id.row_author);
             TextView contentTextView = (TextView) row.findViewById(R.id.row_content);
@@ -140,9 +155,25 @@ public class DetailActivityFragment extends Fragment {
         }
     }
 
+    private void getVideos() {
+        RestClient.getMoviesApi().getVideos(mMovie.getId(), new Callback<VideosResponse>() {
+            @Override
+            public void success(VideosResponse videosResponse, Response response) {
+                mVideosResponse = videosResponse;
+                handleVideos();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.w(TAG, "Failed to get videos: " + error.getMessage());
+                Toast.makeText(getActivity(), "Failed to get videos", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void handleVideos() {
         mTrailersLayout.removeAllViews();
-        for (final Video video : mVideoList) {
+        for (final Video video : mVideosResponse.getVideoList()) {
             View row = mInflater.inflate(R.layout.row_trailer, mTrailersLayout, false);
             TextView contentTextView = (TextView) row.findViewById(R.id.row_content);
             contentTextView.setText(video.getName());
@@ -170,5 +201,12 @@ public class DetailActivityFragment extends Fragment {
     public void onFavoriteClicked() {
         FavoritesManager.saveFavoriteMovie(getActivity(), mMovie);
         mDetailFavorite.setImageResource(R.drawable.ic_star_black_48dp);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(KEY_REVIEWS_RESPONSE, mReviewsResponse);
+        outState.putSerializable(KEY_VIDEOS_RESPONSE, mVideosResponse);
     }
 }
