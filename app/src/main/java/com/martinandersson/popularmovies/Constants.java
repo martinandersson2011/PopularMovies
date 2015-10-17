@@ -12,5 +12,6 @@ public final class Constants {
 
     public static final int SORT_ORDER_MOST_POPULAR = 0;
     public static final int SORT_ORDER_HIGHEST_RATED = 1;
+    public static final int SORT_ORDER_FAVORITES = 2;
 
 }

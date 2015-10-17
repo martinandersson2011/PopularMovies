@@ -2,6 +2,7 @@
     <string name="app_name">Popular Movies</string>
     <string name="action_most_popular">Most Popular</string>
     <string name="action_highest_rated">Highest Rated</string>
+    <string name="action_favorites">Favorites</string>
     <string name="no_results">No results found.\n\nPlease make sure that you have added the API key to Constants.THE_MOVIE_DB_API_KEY\n\nYou can get a key at www.themoviedb.org</string>
     <string name="cd_movie">Movie</string>
     <string name="detail_activity">Movie Detail</string>

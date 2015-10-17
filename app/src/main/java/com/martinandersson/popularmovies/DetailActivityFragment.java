@@ -27,6 +27,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import de.greenrobot.event.EventBus;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -47,6 +48,9 @@ public class DetailActivityFragment extends Fragment {
     @Bind(R.id.detail_vote_average)
     TextView mDetailVoteAverage;
 
+    @Bind(R.id.detail_favorite)
+    ImageView mDetailFavorite;
+
     @Bind(R.id.detail_overview)
     TextView mDetailOverview;
 
@@ -60,7 +64,7 @@ public class DetailActivityFragment extends Fragment {
     private List<Video> mVideoList;
 
     private LayoutInflater mInflater;
-
+    private Movie mMovie;
     public DetailActivityFragment() {
     }
 
@@ -71,22 +75,25 @@ public class DetailActivityFragment extends Fragment {
         ButterKnife.bind(this, rootView);
 
         SelectedMovieEvent event = EventBus.getDefault().getStickyEvent(SelectedMovieEvent.class);
-        Movie movie = event.getMovie();
+        mMovie = event.getMovie();
 
-        if (movie != null) {
-            String title = movie.getTitle();
-            String releaseDate = movie.getReleaseDate();
-            String voteAverage = movie.getVoteAverage() + " / 10.0";
-            String overView = movie.getOverview();
+        if (mMovie != null) {
+            String title = mMovie.getTitle();
+            String releaseDate = mMovie.getReleaseDate();
+            String voteAverage = mMovie.getVoteAverage() + " / 10.0";
+            String overView = mMovie.getOverview();
 
             mDetailTitle.setText(title);
             mDetailReleaseDate.setText(releaseDate);
             mDetailVoteAverage.setText(voteAverage);
             mDetailOverview.setText(overView);
-            String url = Constants.BASE_IMAGE_URL + movie.getPosterPath();
+            String url = Constants.BASE_IMAGE_URL + mMovie.getPosterPath();
             Picasso.with(getActivity()).load(url).fit().centerCrop().into(mDetailImage);
 
-            RestClient.getMoviesApi().getReviews(movie.getId(), new Callback<ReviewsResponse>() {
+            boolean favorite = FavoritesManager.isMovieFavorite(getActivity(), mMovie);
+            mDetailFavorite.setImageResource(favorite ? R.drawable.ic_star_black_48dp : R.drawable.ic_star_border_black_48dp);
+
+            RestClient.getMoviesApi().getReviews(mMovie.getId(), new Callback<ReviewsResponse>() {
                 @Override
                 public void success(ReviewsResponse reviewsResponse, Response response) {
                     mReviewList = reviewsResponse.getReviewList();
@@ -100,7 +107,7 @@ public class DetailActivityFragment extends Fragment {
                 }
             });
 
-            RestClient.getMoviesApi().getVideos(movie.getId(), new Callback<VideosResponse>() {
+            RestClient.getMoviesApi().getVideos(mMovie.getId(), new Callback<VideosResponse>() {
                 @Override
                 public void success(VideosResponse videosResponse, Response response) {
                     mVideoList = videosResponse.getVideoList();
@@ -157,5 +164,11 @@ public class DetailActivityFragment extends Fragment {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + videoKey));
             startActivity(intent);
         }
+    }
+
+    @OnClick(R.id.detail_favorite)
+    public void onFavoriteClicked() {
+        FavoritesManager.saveFavoriteMovie(getActivity(), mMovie);
+        mDetailFavorite.setImageResource(R.drawable.ic_star_black_48dp);
     }
 }

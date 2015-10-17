@@ -64,6 +64,19 @@
             android:text="@string/sample_vote_average"
             />
 
+        <ImageView
+            android:id="@+id/detail_favorite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_star_border_black_48dp"
+            android:layout_below="@id/detail_vote_average"
+            android:layout_marginLeft="@dimen/standard_margin"
+            android:layout_marginStart="@dimen/standard_margin"
+            android:layout_marginTop="@dimen/half_margin"
+            android:layout_toEndOf="@+id/detail_image"
+            android:layout_toRightOf="@id/detail_image"
+            />
+
         <TextView
             android:id="@+id/detail_overview"
             style="@style/textBodyStyle"

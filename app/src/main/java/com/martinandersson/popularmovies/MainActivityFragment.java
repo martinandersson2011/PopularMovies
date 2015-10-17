@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.martinandersson.popularmovies.api.RestClient;
 import com.martinandersson.popularmovies.events.SortOrderEvent;
@@ -92,8 +93,15 @@ public class MainActivityFragment extends Fragment {
         SortOrderEvent event = EventBus.getDefault().getStickyEvent(SortOrderEvent.class);
         if (event == null || event.getSortOrder() == Constants.SORT_ORDER_MOST_POPULAR) {
             RestClient.getMoviesApi().getMoviesByPopularity(moviesResponseCallback);
-        } else {
+        } else if (event == null || event.getSortOrder() == Constants.SORT_ORDER_HIGHEST_RATED) {
             RestClient.getMoviesApi().getMoviesByRating(moviesResponseCallback);
+        } else {
+            mMovies = FavoritesManager.getFavoriteMovies(getActivity());
+            mAdapter.updateData(mMovies);
+            mNoResults.setVisibility(mMovies.size() == 0 ? View.VISIBLE : View.GONE);
+            if (mMovies.size() == 0) {
+                Toast.makeText(getActivity(), "No favorites found", Toast.LENGTH_SHORT).show();
+            }
         }
 
     }

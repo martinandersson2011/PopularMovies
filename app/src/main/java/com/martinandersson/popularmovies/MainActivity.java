@@ -53,6 +53,9 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.action_highest_rated) {
             EventBus.getDefault().postSticky(new SortOrderEvent(Constants.SORT_ORDER_HIGHEST_RATED));
             return true;
+        } else if (id == R.id.action_favorites) {
+            EventBus.getDefault().postSticky(new SortOrderEvent(Constants.SORT_ORDER_FAVORITES));
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
