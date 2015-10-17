@@ -24,6 +24,12 @@ public class DetailActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
+        // Finish if we should be using a two pane layout. (Can happen after rotating to landscape)
+        boolean isTwoPaneLayout = getResources().getBoolean(R.bool.isTwoPaneLayout);
+        if (isTwoPaneLayout) {
+            finish();
+        }
+
     }
 
     @Override

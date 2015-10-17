@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.martinandersson.popularmovies.api.RestClient;
+import com.martinandersson.popularmovies.events.SelectedMovieEvent;
 import com.martinandersson.popularmovies.events.SortOrderEvent;
 import com.martinandersson.popularmovies.model.Movie;
 import com.martinandersson.popularmovies.model.MoviesResponse;
@@ -61,7 +62,7 @@ public class MovieGridFragment extends Fragment {
             mMoviesResponse = (MoviesResponse) savedInstanceState.getSerializable(KEY_MOVIES_RESPONSE);
             if (mMoviesResponse != null) {
                 mMovies = mMoviesResponse.getMovieList();
-                mAdapter.updateData(mMovies);
+                updateMovieGrid();
             } else {
                 getMovies();
             }
@@ -95,7 +96,7 @@ public class MovieGridFragment extends Fragment {
             public void success(MoviesResponse moviesResponse, Response response) {
                 mMoviesResponse = moviesResponse;
                 mMovies = moviesResponse.getMovieList();
-                mAdapter.updateData(mMovies);
+                updateMovieGrid();
             }
 
             @Override
@@ -117,11 +118,25 @@ public class MovieGridFragment extends Fragment {
             mMovies = FavoritesManager.getFavoriteMovies(getActivity());
             mMoviesResponse = new MoviesResponse();
             mMoviesResponse.setMovieList(mMovies);
-            mAdapter.updateData(mMovies);
-            mNoResults.setVisibility(mMovies.size() == 0 ? View.VISIBLE : View.GONE);
+            updateMovieGrid();
             if (mMovies.size() == 0) {
                 Toast.makeText(getActivity(), "No favorites found", Toast.LENGTH_SHORT).show();
             }
+        }
+    }
+
+    private void updateMovieGrid() {
+        mAdapter.updateData(mMovies);
+        mNoResults.setVisibility(mMovies.size() == 0 ? View.VISIBLE : View.GONE);
+
+        boolean isTwoPaneLayout = getResources().getBoolean(R.bool.isTwoPaneLayout);
+        SelectedMovieEvent event = EventBus.getDefault().getStickyEvent(SelectedMovieEvent.class);
+
+        // Two pane layout and no selected movie
+        if (isTwoPaneLayout && event == null) {
+            // Select first movie
+            Movie movie = mMovies.get(0);
+            EventBus.getDefault().postSticky(new SelectedMovieEvent(movie));
         }
 
     }

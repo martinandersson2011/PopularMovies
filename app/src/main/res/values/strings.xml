@@ -6,10 +6,6 @@
     <string name="no_results">No results found.\n\nPlease make sure that you have added the API key to Constants.THE_MOVIE_DB_API_KEY\n\nYou can get a key at www.themoviedb.org</string>
     <string name="cd_movie">Movie</string>
     <string name="detail_activity">Movie Detail</string>
-    <string name="sample_movie_title">Chappie</string>
-    <string name="sample_release_date">2015</string>
-    <string name="sample_vote_average">9.1/10</string>
-    <string name="sample_movie_description">This is a sample description for a movie</string>
     <string name="reviews">Reviews</string>
     <string name="sample_author">Martin</string>
     <string name="sample_content">This was the best movie I\'ve ever seen. Except for most of the other movies. Wait what?</string>

@@ -62,8 +62,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onEvent(SelectedMovieEvent event) {
-        Intent intent = new Intent(this, DetailActivity.class);
-        startActivity(intent);
-
+        // Only start a detail activity if we are not using a two pane layout
+        boolean isTwoPaneLayout = getResources().getBoolean(R.bool.isTwoPaneLayout);
+        if (!isTwoPaneLayout) {
+            Intent intent = new Intent(this, DetailActivity.class);
+            startActivity(intent);
+        }
     }
 }
